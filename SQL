@@ -1,0 +1,95 @@
+USE [wepairhealth]
+GO
+/****** Object:  StoredProcedure [dbo].[Jobs_Select_ById]    Script Date: 1/2/2024 5:39:07 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Alfred Gongora
+-- Create date: 11-13-2023
+-- Description:	Bringing back information pertaining to a specific job by it's Id
+-- Code Reviewer:
+
+-- MODIFIED BY:
+-- MODIFIED DATE:
+-- Code Reviewer:
+-- Note:
+-- =============================================
+
+ALTER PROC [dbo].[Jobs_Select_ById]
+@Id int
+
+AS 
+
+/*
+
+Declare @Id int = 32
+
+
+Execute [dbo].[Jobs_Select_ById]
+		
+		@Id
+
+*/
+
+BEGIN
+
+Select j.Id
+			,jt.Id
+			,jt.Type
+			,j.Title
+			,j.Description
+			,j.Requirements
+			,l.Id as locationId
+			,lt.Id as locationTypeId
+			,lt.Name
+			,l.LineOne
+			,l.LineTwo
+			,l.City
+			,l.Zip
+			,s.Id
+			,s.Name
+			,l.Longitude
+			,l.Latitude
+			,l.DateCreated
+			,l.DateModified
+			,j.IsActive
+			,j.ContactName
+			,j.ContactPhone
+			,j.ContactEmail
+			,CreatedBy = dbo.fn_GetBaseUserJSON(j.CreatedBy)
+			,j.DateCreated
+			,j.DateModified
+			,Skills = (Select sk.id, sk.name
+						From dbo.Skills as sk
+						inner join dbo.JobsSkills as js
+						on js.SkillId = sk.Id
+						Where js.JobId = j.id
+						For JSON AUTO)
+			,o.Logo
+			,o.Name
+			,o.Description
+			
+
+			FROM dbo.Jobs as j 
+			INNER JOIN dbo.Locations as l
+			ON j.LocationId = l.Id
+			INNER JOIN dbo.States as s
+			ON l.StateId = s.Id
+			INNER JOIN dbo.JobTypes as jt
+			ON j.JobTypeId = jt.Id
+			INNER JOIN dbo.LocationTypes as lt
+			ON l.LocationTypeId = lt.Id
+			inner join dbo.Organizations as o
+				on j.CreatedBy = o.CreatedBy
+
+	Where j.[Id] = @Id
+
+
+  END
+
+
+
+
