@@ -1,1 +1,1 @@
-# WePairHealth
+WePair is a platform that helps community health workers to discover flexible job opportunities within diverse organizations that value their skills and expertise. This repository contains SQL, .NET, and React code for the Job feature.
